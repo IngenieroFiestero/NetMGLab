@@ -3,11 +3,14 @@
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
-var debug = require('debug')('netmglab:server');
-var http = require('http');
-
+const cluster = require('cluster');
+const app = require('../app');
+const debug = require('debug')('netmglab:server');
+const http = require('http');
+const mongoose = require('mongoose');
+const config = require('../config');
+const snmpMultiServer = require('../lib/SNMPMultiServer');
+const numCPUs = require('os').cpus().length;
 /**
  * Get port from environment and store in Express.
  */
@@ -25,10 +28,42 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+//server.listen(port);
+//server.on('error', onError);
+//server.on('listening', onListening);
+if(cluster.isMaster){
+  
+  //We are the master
+  console.log('Configurando sistema.......');
+  console.log('Environment: ' + process.env.NODE_ENV);
 
+  if(process.env.NODE_ENV === 'production'){
+    console.info("PRODUCTION MODE");
+  }else{
+    console.log('debug',"DEVELOPMENT MODE");
+  }
+  for(var i = 0; i < numCPUs;i++){
+    var worker = cluster.fork();
+    cluster.on('exit', function(worker,code,signal){
+      //If a child dies spawn another
+      console.log("Error: " + code)
+      worker = cluster.fork();
+    });
+  }
+  snmpMultiServer();
+}else{
+  snmpMultiServer();
+  var db = mongoose.connect(config.db.uri);
+  mongoose.connection.once('connected', function() {
+    //Each child connects to mongo and reuses the connection
+    console.log('New worker: ' + process.pid);
+    console.log("Connected to database");
+    server = http.createServer(app);
+    server.listen(port);
+    server.on('error', onError);
+  });
+
+}
 /**
  * Normalize a port into a number, string, or false.
  */
