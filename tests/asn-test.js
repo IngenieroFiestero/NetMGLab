@@ -4,7 +4,12 @@ const mongoose = require('mongoose');
 const config = require('../config');
 const readline = require('readline');
 const SNMPAgentModel = require('../models/snmp_agent');
+const os = require('os');
+var windows = os.platform() == 'win32';
 
+if(windows){
+    console.log("Multiprocessing udp not implemented yet");
+}
 if (cluster.isMaster) {
     var db = mongoose.connect(config.db.uri);
     mongoose.connection.once('connected', function () {
@@ -29,7 +34,6 @@ if (cluster.isMaster) {
         cluster.on('exit', function (worker, code, signal) {
             //If a child dies spawn another
             console.log("Error: " + code);
-            worker = cluster.fork();
         });
     }
     snmpMultiServer.init();
@@ -45,14 +49,12 @@ if (cluster.isMaster) {
                 output: process.stdout
             });
             rl.on('line', (input) => {
-                console.log(`Received: ${input}`);
                 if (input == "stop") {
                     console.log("Sending stop");
                     snmpMultiServer.stopALLSNMPAgents();
                 }
             });
             rl.on('line', (input) => {
-                console.log(`Received: ${input}`);
                 if (input == "launch") {
                     console.log("Sending Launch");
                     snmpMultiServer.launchSNMPAgent(mongoose.Types.ObjectId("58e2b48e765b35261001554d"));
