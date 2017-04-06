@@ -42,7 +42,7 @@ var SNMPAgentSchema = new Schema({
         type : String,
         default : "public"
     },
-    mibList : [Schema.ObjectId]
+    mibModuleList : [Schema.ObjectId]
 });
 
 module.exports = mongoose.model('SNMPAgent', SNMPAgentSchema);

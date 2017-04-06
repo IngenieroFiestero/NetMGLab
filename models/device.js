@@ -28,7 +28,7 @@ var DeviceSchema = new Schema({
         type : String,
         required : true
     },
-    mibList : [Schema.ObjectId]
+    mibModuleList : [Schema.ObjectId]
 });
 
 module.exports = mongoose.model('Device', DeviceSchema);
