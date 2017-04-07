@@ -163,5 +163,5 @@ for(var i = 0;i < syntaxResults.textSequence.length; i++){
 //-------------------------------- OBJECT TYPE TEST ---------------------------------------
 syntaxResults = require('./object-type-test.json');
 for(var i = 0;i < syntaxResults.textSequence.length; i++){
-    assert.deepEqual(smi.parseSyntax(syntaxResults.textSequence[i]).returned, syntaxResults.results[i].returned,'Error in OBJECT TYPE test: ' + syntaxResults.textSequence[i]);
+    assert.deepEqual(smi.parseObjectType(syntaxResults.textSequence[i]).returned, syntaxResults.results[i].returned,'Error in OBJECT TYPE test: ' + syntaxResults.textSequence[i]);
 }

@@ -5,14 +5,14 @@
     "results": [
         {
             "returned": {
-                "name" : "ccmHistoryEventConfigSource",
-                "syntax" : "HistoryEventMedium",
+                "name" : "ccmHistoryEventConfigDestination",
+                "syntax" : {"type" : "HistoryEventMedium"},
                 "maxAccess" : "read-only",
                 "status" : "current",
-                "description" :  "The configuration data source for the event.",
+                "description" :  "The configuration data destination for the event.",
                 "oid" : {
                     "name" : "ccmHistoryEventEntry",
-                    "number" : 4
+                    "number" : 5
                 }
             },
             "lastChar": 24
