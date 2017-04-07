@@ -1,0 +1,21 @@
+{
+    "textSequence": [
+        "ccmHistoryEventConfigDestination OBJECT-TYPE\n\tSYNTAX\tHistoryEventMedium\n\tMAX-ACCESS\tread-only\n\tSTATUS\tcurrent\n\tDESCRIPTION\t\"The configuration data destination for the event.\"\n\t::= { ccmHistoryEventEntry 5 }\n"
+    ],
+    "results": [
+        {
+            "returned": {
+                "name" : "ccmHistoryEventConfigSource",
+                "syntax" : "HistoryEventMedium",
+                "maxAccess" : "read-only",
+                "status" : "current",
+                "description" :  "The configuration data source for the event.",
+                "oid" : {
+                    "name" : "ccmHistoryEventEntry",
+                    "number" : 4
+                }
+            },
+            "lastChar": 24
+        }
+    ]
+}

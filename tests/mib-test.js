@@ -1,6 +1,7 @@
 const assert = require('assert');
 var fs = require("fs");
 var smi = require("../lib/smi");
+/*
 var sequence = 'ciscoConfigManMIBObjects  OBJECT IDENTIFIER ::= { ciscoConfigManMIB 1 }';
 console.log(smi.parseObjectIdentifier(sequence));
 var sequence2 = `ciscoConfigManMIB MODULE-IDENTITY
@@ -150,3 +151,17 @@ console.log(textualConvention);
 fs.writeFile( "textualConvention.json", JSON.stringify( textualConvention.returned ), "utf8", ()=>{
 
 } );
+
+console.log(smi.parseSyntax(' HistoryEventMedium\n'));
+*/
+//-------------------------------- SYNTAX TEST ---------------------------------------
+var syntaxResults = require('./syntax-test.json');
+for(var i = 0;i < syntaxResults.textSequence.length; i++){
+    assert.deepEqual(smi.parseSyntax(syntaxResults.textSequence[i]).returned, syntaxResults.results[i].returned,'Error in SYNTAX test: ' + syntaxResults.textSequence[i]);
+}
+
+//-------------------------------- OBJECT TYPE TEST ---------------------------------------
+syntaxResults = require('./object-type-test.json');
+for(var i = 0;i < syntaxResults.textSequence.length; i++){
+    assert.deepEqual(smi.parseSyntax(syntaxResults.textSequence[i]).returned, syntaxResults.results[i].returned,'Error in OBJECT TYPE test: ' + syntaxResults.textSequence[i]);
+}

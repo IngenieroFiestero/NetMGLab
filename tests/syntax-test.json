@@ -1,0 +1,41 @@
+{
+    "textSequence": [
+        "Integer32 (1..2147483647)\n",
+        " INTEGER  {commandLine(1),snmp(2)}\n",
+        "TimeTicks\n"
+    ],
+    "results": [
+        {
+            "returned": {
+                "type": "Integer32",
+                "limit": {
+                    "min": 1,
+                    "max": 2147483647
+                }
+            },
+            "lastChar": 24
+        },
+        {
+            "returned": {
+                "type": "INTEGER",
+                "array": [
+                    {
+                        "name": "commandLine",
+                        "position": 1
+                    },
+                    {
+                        "name": "snmp",
+                        "position": 2
+                    }
+                ]
+            },
+            "lastChar": 36
+        },
+        {
+            "returned": {
+                "type": "TimeTicks"
+            },
+            "lastChar": 9
+        }
+    ]
+}
