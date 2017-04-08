@@ -1,5 +1,15 @@
 # NetMGLab
-A complete Network Management Laboratory for SNMP and NETCONF.
+
+<div align="center">
+  <!-- Build Status -->
+  <a href="https://github.com/IngenieroFiestero/NetMGLab">
+    <img src="https://travis-ci.org/IngenieroFiestero/NetMGLab.svg?branch=master"
+      alt="Build Status" />
+  </a>
+</div>
+
+### A complete Network Management Laboratory for SNMP and NETCONF.
+
 ![Image of NetMGLab](https://raw.githubusercontent.com/IngenieroFiestero/NetMGLab/master/NetMGLab.png)
 
 ## Compatibilities
