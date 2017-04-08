@@ -1,0 +1,10 @@
+<alert-list></alert-list>
+<div class='jumbotron'>
+    <h1>SnmpAgents</h1>
+    <div class="list-group">
+        <a *ngFor="let agent of agents" [class.active]="agent === selectedAgent" (click)="onSelect(agent)" class="list-group-item">
+            <span>{{agent.name}}</span> {{agent.port}}
+        </a>
+    </div>
+    <agent-detail [agent]="selectedAgent"></agent-detail>
+</div>
