@@ -4,6 +4,8 @@ const assert = require('assert');
 const SNMPPacket = snmp.SNMPPacket;
 const PDU = snmp.PDU;
 const VarBind = snmp.VarBind;
+const cluster = require('cluster');
+if(cluster.isMaster){
 var varBinds = [
     new VarBind(tags.TAG.OctetString, 'PACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO', '1.2.3.4'),
     new VarBind(tags.TAG.Integer, 12, '1.2.3.4'),
@@ -41,3 +43,4 @@ describe('SNMP TEST', ()=>{
         assert.deepEqual(decodedPckt,pckt);
     });
 });
+}
