@@ -1,0 +1,47 @@
+<div *ngIf="device">
+    <div class="card">
+        <div class="card-header">
+            <!--HEADER -->
+            <h2>{{device.name}}</h2>
+        </div>
+        <div class="card-block">
+            <!-- BLOCK -->
+            <div class="form-group row">
+                <label for="device-name" class="col-4 col-form-label">Name:</label>
+                <input [(ngModel)]="device.name" id="device-name" type="text" class="form-control col-8" placeholder="Devie name" aria-describedby="device-name">
+                <small id="device-name-help" class="form-text text-muted offset-4">Needs to be unique</small>
+            </div>
+            <div class="form-group">
+                <label for="descriptionEditor">Description:</label>
+                <textarea [(ngModel)]="device.description" class="form-control" id="descriptionEditor" rows="5"></textarea>
+            </div>
+            <div class="form-group row">
+                <label for="device-ip" class="col-4 col-form-label">IP:</label>
+                <input [(ngModel)]="device.ip" id="device-ip" type="text" class="form-control col-8" placeholder="device IP" aria-describedby="device-ip">
+                <small id="device-ip-help" class="form-text text-muted offset-4">Ex: 127.0.0.1</small>
+            </div>
+            <hr/>
+            <div class="form-group row">
+                <label for="device-snmp-port" class="col-4 col-form-label">Port:</label>
+                <input [(ngModel)]="device.snmp.port" id="device-snmp-port" type="text" class="form-control col-8" placeholder="SNMP Port" aria-describedby="device-snmp-port">
+                <small id="device-snmp-port-help" class="form-text text-muted offset-4">Ex: 160</small>
+            </div>
+            <div class="form-group row">
+                <label for="device-snmp-ro-com" class="col-4 col-form-label">Read Comunity:</label>
+                <input [(ngModel)]="device.snmp.readOnlyCommunity" id="device-snmp-ro-com" type="text" class="form-control col-8" placeholder="SNMP Write Comunity" aria-describedby="device-snmp-rw-com">
+                <small id="device-snmp-ro-com-help" class="form-text text-muted offset-4">Ex: public</small>
+            </div>
+            <div class="form-group row">
+                <label for="device-snmp-rw-com" class="col-4 col-form-label">Write Comunity:</label>
+                <input [(ngModel)]="device.snmp.readWriteCommunity" id="device-snmp-rw-com" type="text" class="form-control col-8" placeholder="SNMP Write Comunity" aria-describedby="device-snmp-rw-com">
+                <small id="device-snmp-rw-com-help" class="form-text text-muted offset-4">Ex: private</small>
+            </div>
+        </div>
+        <!-- /BLOCK -->
+        <div class="card-footer text-muted">
+            <!-- FOOTER -->
+            <button type="button" class="btn btn-primary">Save</button>
+        </div>
+        <!-- /FOOTER -->
+    </div>
+</div>

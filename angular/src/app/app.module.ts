@@ -7,6 +7,9 @@ import { RouterModule } from '@angular/router';
 import { SnmpAgentDetailComponent } from './snmpagent/snmp-agent-detail.component'
 import { SnmpAgentsComponent } from './snmpagent/snmp-agents.component'
 import { DashboardComponent } from './dashboard/dashboard.component'
+import { DevicesComponent } from './device/devices.component'
+import { DeviceDetailComponent } from './device/device-detail.component'
+import { DeviceService } from './device/device.service'
 
 import { SnmpAgentService } from './snmpagent/snmp-agent.service';
 
@@ -27,6 +30,10 @@ import { SnmpAgentService } from './snmpagent/snmp-agent.service';
       {
         path: 'dashboard',
         component: DashboardComponent
+      },
+      {
+        path: 'devices',
+        component: DevicesComponent
       }
     ])
   ],
@@ -34,9 +41,11 @@ import { SnmpAgentService } from './snmpagent/snmp-agent.service';
     AppComponent,
     SnmpAgentDetailComponent,
     SnmpAgentsComponent,
-    DashboardComponent
+    DashboardComponent,
+    DevicesComponent,
+    DeviceDetailComponent
   ],
   bootstrap: [AppComponent],
-  providers: [SnmpAgentService]
+  providers: [SnmpAgentService,DeviceService]
 })
 export class AppModule { }

@@ -4,4 +4,5 @@ export class SnmpAgent {
   port : number;
   readOnlyCommunity : string;
   readWriteCommunity : String;
+  device : String;
 }
