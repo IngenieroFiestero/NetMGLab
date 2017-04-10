@@ -1,5 +1,5 @@
 const snmp = require('../lib/snmp');
-const tags = require('../lib/ASN1/constants/ber');
+const tags = require('../lib/snmp/ASN1/constants/ber');
 const assert = require('assert');
 const SNMPPacket = snmp.SNMPPacket;
 const PDU = snmp.PDU;
@@ -27,12 +27,12 @@ var pckt = new SNMPPacket(
  * console.log(pckt);
  * console.log(pckt.pdu.varBinds);
  */
-var encodedpckt = snmp.encode(pckt, snmp.ENCODING_RULES.BER)
+var encodedpckt = pckt.encode(snmp.ENCODING_RULES.BER)
 /**
  * console.log("----------------------ENCODED PACKET----------------------")
  * console.log(encodedpckt)
  */
-var decodedPckt = snmp.decode(encodedpckt, snmp.ENCODING_RULES.BER);
+var decodedPckt = new SNMPPacket(encodedpckt,snmp.ENCODING_RULES.BER);
 /**
  * console.log("----------------------DECODED PACKET----------------------");
  * console.log(decodedPckt);

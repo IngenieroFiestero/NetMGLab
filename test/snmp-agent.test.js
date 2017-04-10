@@ -31,7 +31,7 @@ if (cluster.isMaster) {
                     done();
                 });
                 sock.bind(9001, 'localhost', () => {
-                    var buff = snmp.encode(fakePckt, snmp.ENCODING_RULES.BER);
+                    var buff = fakePckt.encode(snmp.ENCODING_RULES.BER);
                     sock.send(buff, 0, buff.length, 8002, 'localhost');
                 });
 
