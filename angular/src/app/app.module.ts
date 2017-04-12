@@ -19,12 +19,16 @@ import { DeviceNewComponent } from './device/device-new.component'
 import { DeviceService } from './device/device.service'
 import { SnmpAgentService } from './snmpagent/snmp-agent.service';
 
+import { BsDropdownModule,TooltipModule } from 'ngx-bootstrap';
+
 @NgModule({
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BsDropdownModule.forRoot(),
+    TooltipModule
   ],
   declarations: [
     AppComponent,
