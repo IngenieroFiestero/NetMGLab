@@ -12,7 +12,7 @@ const config = require('../config');
 const snmpMultiServer = require('../lib/snmp-multiagent');
 const numCPUs = require('os').cpus().length;
 const userSchema = require('../models/user');//First check in db if exists Admin
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 /**
  * Get port from environment and store in Express.
  */
