@@ -1,41 +1,30 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 
+import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
+import { HttpModule }    from '@angular/http';
+
+import { AppComponent } from './app.component';
 import { SnmpAgentDetailComponent } from './snmpagent/snmp-agent-detail.component'
+import { SnmpAgentEditComponent } from './snmpagent/snmp-agent-edit.component'
+import { SnmpAgentNewComponent } from './snmpagent/snmp-agent-new.component'
 import { SnmpAgentsComponent } from './snmpagent/snmp-agents.component'
 import { DashboardComponent } from './dashboard/dashboard.component'
 import { DevicesComponent } from './device/devices.component'
 import { DeviceDetailComponent } from './device/device-detail.component'
-import { DeviceService } from './device/device.service'
+import { DeviceEditComponent } from './device/device-edit.component'
+import { DeviceNewComponent } from './device/device-new.component'
 
+import { DeviceService } from './device/device.service'
 import { SnmpAgentService } from './snmpagent/snmp-agent.service';
 
 @NgModule({
   imports: [
     BrowserModule,
+    HttpModule,
     FormsModule,
-    RouterModule.forRoot([
-      {
-        path: '',
-        redirectTo: '/dashboard',
-        pathMatch: 'full'
-      },
-      {
-        path: 'agents',
-        component: SnmpAgentsComponent
-      },
-      {
-        path: 'dashboard',
-        component: DashboardComponent
-      },
-      {
-        path: 'devices',
-        component: DevicesComponent
-      }
-    ])
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
@@ -43,7 +32,11 @@ import { SnmpAgentService } from './snmpagent/snmp-agent.service';
     SnmpAgentsComponent,
     DashboardComponent,
     DevicesComponent,
-    DeviceDetailComponent
+    DeviceDetailComponent,
+    DeviceEditComponent,
+    SnmpAgentEditComponent,
+    SnmpAgentNewComponent,
+    DeviceNewComponent
   ],
   bootstrap: [AppComponent],
   providers: [SnmpAgentService,DeviceService]

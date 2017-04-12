@@ -7,8 +7,7 @@ var ipv6Regex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|
 var DeviceSchema = new Schema({
     name : {
         type : String,
-        required : true,
-        unique : true
+        required : true
     },
     description : String,
     ip : {
@@ -28,7 +27,13 @@ var DeviceSchema = new Schema({
         type : String,
         required : true
     },
-    mibModuleList : [Schema.ObjectId]
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+    mibModuleList : [Schema.Types.ObjectId]
 });
-
+DeviceSchema.pre('update', function() {
+  this.update({},{ $set: { updatedAt: new Date() } });
+});
 module.exports = mongoose.model('Device', DeviceSchema);

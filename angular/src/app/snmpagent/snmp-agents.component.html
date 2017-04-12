@@ -9,9 +9,12 @@
                     <span>{{agent.name}} </span>
                 </a>
             </div>
+            <hr/>
+            <button type="button" class="btn btn-primary" (click)="newSnmpAgent()">Create new SNMP Agent</button>
         </div>
         <div class="col-md-6">
-            <agent-detail [agent]="selectedAgent"></agent-detail>
+            <agent-detail [agent]="selectedAgent" [device]="deviceForAgent"></agent-detail>
+            <agent-new [agent]="newAgent" [devices]="devices"></agent-new>
         </div>
     </div>
 </div>

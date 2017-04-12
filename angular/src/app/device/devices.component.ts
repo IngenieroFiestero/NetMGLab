@@ -8,6 +8,7 @@ import {DeviceService} from './device.service'
 })
 export class DevicesComponent implements OnInit{ 
   selectedDevice : Device;
+  myNewDevice : Device;
   devices : Device[];
   constructor(private deviceService: DeviceService) { }
   ngOnInit(): void {
@@ -18,5 +19,10 @@ export class DevicesComponent implements OnInit{
   }
   onSelect(device: Device): void {
     this.selectedDevice = device;
+    this.myNewDevice = null;
+  }
+  newDevice() : void {
+    this.myNewDevice = new Device({ id: '0', name: 'Device1', description: 'A nice snmp agent', ip: '127.0.0.1', port: 160, readOnlyCommunity: 'public', readWriteCommunity: 'private' });
+    this.selectedDevice = null;
   }
 }

@@ -9,13 +9,15 @@ const debug = require('debug')('netmglab:server');
 const http = require('http');
 const mongoose = require('mongoose');
 const config = require('../config');
-const snmpMultiServer = require('../lib/SNMPMultiServer');
+const snmpMultiServer = require('../lib/snmp-multiagent');
 const numCPUs = require('os').cpus().length;
+const userSchema = require('../models/user');//First check in db if exists Admin
+const bcrypt = require('bcrypt');
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '8000');
 app.set('port', port);
 
 /**
@@ -31,30 +33,35 @@ var server = http.createServer(app);
 //server.listen(port);
 //server.on('error', onError);
 //server.on('listening', onListening);
-if(cluster.isMaster){
-  
+if (cluster.isMaster) {
+
   //We are the master
   console.log('Configurando sistema.......');
   console.log('Environment: ' + process.env.NODE_ENV);
 
-  if(process.env.NODE_ENV === 'production'){
+  if (process.env.NODE_ENV === 'production') {
     console.info("PRODUCTION MODE");
-  }else{
-    console.log('debug',"DEVELOPMENT MODE");
+  } else {
+    console.log('debug', "DEVELOPMENT MODE");
   }
-  for(var i = 0; i < numCPUs;i++){
+  //Check if the admin user exists in the database
+  mongoose.connect(config.db.uri);
+  mongoose.connection.once('connected', function () {
+    checkAdmin();
+  });
+  for (var i = 0; i < numCPUs; i++) {
     var worker = cluster.fork();
-    cluster.on('exit', function(worker,code,signal){
+    cluster.on('exit', function (worker, code, signal) {
       //If a child dies spawn another
       console.log("Error: " + code)
       worker = cluster.fork();
     });
   }
   snmpMultiServer.init();
-}else{
+} else {
   snmpMultiServer.init();
   var db = mongoose.connect(config.db.uri);
-  mongoose.connection.once('connected', function() {
+  mongoose.connection.once('connected', function () {
     //Each child connects to mongo and reuses the connection
     console.log('New worker: ' + process.pid);
     console.log("Connected to database");
@@ -122,4 +129,40 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+/**
+ * Check if exists the Admin user in the database
+ * 
+ */
+function checkAdmin() {
+  //Default Admin name : Admin
+  userSchema.findOne({ 'local.name': 'Admin' }, (err, doc) => {
+    if (err || !doc) {
+      //Not exists -> Create new Admin user
+      bcrypt.hash('Admin', 10).then(function (hash) {
+        var adminUser = new userSchema({
+          local: {
+            username: 'Admin',
+            password: hash
+          },
+          info: {
+            state: 'active'
+          },
+          profile: {
+            photo: '',
+            nickName: 'Admin'
+          },
+          rol : 'admin'
+        });
+        adminUser.save((err) => {
+          if(err){
+            console.log('Error saving new Admin');
+            console.log(err);
+          }
+        });
+      });
+    }else{
+      console.log('Admin exists');
+    }
+  });
 }

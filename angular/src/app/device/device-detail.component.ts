@@ -1,6 +1,6 @@
 import { Component, Input,OnInit  } from '@angular/core';
 
-import { Device, SNMPDevice } from './device'
+import { Device } from './device'
 
 @Component({
   selector: 'device-detail',

@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -22,24 +23,37 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/public/stylesheets",express.static(path.join(__dirname, 'public/stylesheets')));
-app.use("/public/javascripts",express.static(path.join(__dirname, 'public/javascripts')));
-app.use("/public/images",express.static(path.join(__dirname, 'public/images')));
-
+app.use("/public/stylesheets", express.static(path.join(__dirname, 'public/stylesheets')));
+app.use("/public/javascripts", express.static(path.join(__dirname, 'public/javascripts')));
+app.use("/public/images", express.static(path.join(__dirname, 'public/images')));
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");//Allow CORS
+  //intercepts OPTIONS method
+  if ('OPTIONS' == req.method) {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.status(200).send();
+  }
+  else {
+    //move on
+    next();
+  }
+});
 app.use('/', index);//Login Page
 //app.use('/admin', admin);//Admin Page
 app.use('/dashboard', dashboard);//Dashboard of the netmanagement
 app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

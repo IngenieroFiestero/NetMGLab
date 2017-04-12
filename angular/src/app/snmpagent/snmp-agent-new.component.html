@@ -1,0 +1,51 @@
+<div *ngIf="agent" class="container">
+  <div class="card">
+    <div class="card-header">
+      <!--HEADER -->
+      <h2>{{agent.name}}</h2>
+    </div>
+    <div class="card-block">
+      <!-- BLOCK -->
+      <div class="form-group row">
+        <label for="agent-name" class="col-4 col-form-label">Name:</label>
+        <input [(ngModel)]="agent.name" id="agent-name" type="text" class="form-control col-8" placeholder="Devie name" aria-describedby="agent-name">
+        <small id="agent-name-help" class="form-text text-muted offset-4">Needs to be unique</small>
+      </div>
+      <div class="form-group">
+        <label for="descriptionEditor">Description:</label>
+        <textarea [(ngModel)]="agent.description" class="form-control" id="descriptionEditor" rows="5"></textarea>
+      </div>
+      <hr/>
+      <div class="form-group row">
+        <label for="agent-snmp-port" class="col-4 col-form-label">Port:</label>
+        <input [(ngModel)]="agent.port" id="agent-snmp-port" type="text" class="form-control col-8" placeholder="SNMP Port" aria-describedby="agent-snmp-port">
+        <small id="agent-snmp-port-help" class="form-text text-muted offset-4">Ex: 160</small>
+      </div>
+      <div class="form-group row">
+        <label for="agent-snmp-ro-com" class="col-4 col-form-label">Read Comunity:</label>
+        <input [(ngModel)]="agent.readOnlyCommunity" id="agent-snmp-ro-com" type="text" class="form-control col-8" placeholder="SNMP Write Comunity"
+          aria-describedby="agent-snmp-rw-com">
+        <small id="agent-snmp-ro-com-help" class="form-text text-muted offset-4">Ex: public</small>
+      </div>
+      <div class="form-group row">
+        <label for="agent-snmp-rw-com" class="col-4 col-form-label">Write Comunity:</label>
+        <input [(ngModel)]="agent.readWriteCommunity" id="agent-snmp-rw-com" type="text" class="form-control col-8" placeholder="SNMP Write Comunity"
+          aria-describedby="agent-snmp-rw-com">
+        <small id="agent-snmp-rw-com-help" class="form-text text-muted offset-4">Ex: private</small>
+      </div>
+      <div class="form-group">
+        <label for="agent-device">Select a device</label>
+        <select class="form-control" id="agent-device" [(ngModel)]="agent.device">
+          <option *ngFor="let device of devices" [value]="device._id">{{device.name}}</option>
+        </select>
+        <small  class="form-text text-muted">The test device is this server.</small>
+      </div>
+    </div>
+    <!-- /BLOCK -->
+    <div class="card-footer text-muted">
+      <!-- FOOTER -->
+      <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+    </div>
+    <!-- /FOOTER -->
+  </div>
+</div>

@@ -1,14 +1,13 @@
 var mongoose = require('mongoose');
 var Schema = require('mongoose').Schema;
-var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
 var UserSchema = new Schema({
     local: {
-        username: String,
+        username: {type : String,
+        unique : true},
         password: String
     },
     info: {
-        email: String,
         lastConnection: {
             type: Date,
             default: Date.now
@@ -27,11 +26,18 @@ var UserSchema = new Schema({
         },
         nickname: String
     },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
     rol: {
         type: String,
         enum: ['user', 'moderator', 'admin'],
         default: 'user'
-    }
+    },
+    userGroups : [Schema.Types.ObjectId]
 });
-
+UserSchema.pre('update', function() {
+  this.update({},{ $set: { updatedAt: new Date() } });
+});
 module.exports = mongoose.model('User', UserSchema);

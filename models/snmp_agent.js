@@ -12,37 +12,45 @@ var Schema = require('mongoose').Schema;
  * mibList : The MIBs availables.
  */
 var SNMPAgentSchema = new Schema({
-    port : {
-        type : Number,
-        unique : true,
-        required : true
+    port: {
+        type: Number,
+        unique: true,
+        required: true
     },
-    device : {
-        type : Schema.ObjectId,
-        required : true
+    device: {
+        type: Schema.Types.ObjectId
     },
-    readOnlyCommunity : {
-        type : String,
-        required : true
+    readOnlyCommunity: {
+        type: String,
+        required: true
     },
-    readWriteCommunity : {
-        type : String,
-        required : true
+    readWriteCommunity: {
+        type: String,
+        required: true
     },
-    description : {
-        type : String,
-        required : false
+    description: {
+        type: String,
+        required: false
     },
-    name : {
-        type : String,
-        required : true,
-        unique : true
+    name: {
+        type: String,
+        required: true
     },
-    userGroup : {
-        type : String,
-        default : "public"
+    userGroup: {
+        type: String,
+        default: "public"
     },
-    mibModuleList : [Schema.ObjectId]
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+    createdAt : {
+        type: Date,
+        default: Date.now
+    },
+    mibModuleList : [Schema.Types.ObjectId]
 });
-
+SNMPAgentSchema.pre('update', function() {
+  this.update({},{ $set: { updatedAt: new Date() } });
+});
 module.exports = mongoose.model('SNMPAgent', SNMPAgentSchema);
