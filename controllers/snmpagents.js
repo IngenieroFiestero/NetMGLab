@@ -1,4 +1,5 @@
 const snmpAgentSchema = require('../models/snmp_agent');
+const SNMPMultiAgent = require('../lib/snmp-multiagent');
 /**
  * Find SNMP agent by ID. Use like middleware in ExpressJS
  */
@@ -40,6 +41,7 @@ exports.addSNMPAgent = (req, res, next) => {
 
     snmpAgent.save(function (err, agente) {
         if (err) res.status(500).send(err.message);
+        SNMPMultiAgent.launchSNMPAgent(agente._id);
         res.status(200).jsonp(agente);
     });
 }
@@ -47,33 +49,42 @@ exports.addSNMPAgent = (req, res, next) => {
  * Update a existing SNMP  Agent. Use like middleware in ExpressJS
  */
 exports.updateSNMPAgent = (req, res, next) => {
+    var changeAgent = false;
     var update = {};
     if(req.body.name){
         update.name = req.body.name;
     }
     if(req.body.port){
         update.port = req.body.port;
+        changeAgent = true;
     }
     if(req.body.device){
         update.device = req.body.device;
+        changeAgent = true;
     }
     if(req.body.readOnlyCommunity){
         update.readOnlyCommunity = req.body.readOnlyCommunity;
+        changeAgent = true;
     }
     if(req.body.readWriteCommunity){
         update.readWriteCommunity = req.body.readWriteCommunity;
+        changeAgent = true;
     }
     if(req.body.description){
         update.description = req.body.description;
     }
     if(req.body.userGroup){
         update.userGroup = req.body.userGroup;
+        changeAgent = true;
     }
     snmpAgentSchema.findOneAndUpdate({ _id : req.params.id}, update,{}, function (err, doc) {
         if (err) {
             console.log(err);
             res.status(500).send(err.message);
         } else {
+            if(changeAgent){
+                SNMPMultiAgent.updateSNMPAgent(doc._id);
+            }
             res.status(200).jsonp(doc);
         }
     });
