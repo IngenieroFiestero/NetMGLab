@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers,RequestOptions, Http } from '@angular/http';
 import { SnmpAgent } from './snmp-agent';
 import 'rxjs/add/operator/toPromise';
 
@@ -27,7 +27,7 @@ export class SnmpAgentService {
   postSnmpAgent(agent: SnmpAgent): Promise<SnmpAgent> {
     const url = `http://127.0.0.1:8000/api/agents`;
     return this.http
-      .post(url, JSON.stringify(agent), { headers: this.headers })
+      .post(url, JSON.stringify(agent), this.jwt())
       .toPromise()
       .then(() => agent)
       .catch(this.handleError);
@@ -35,9 +35,30 @@ export class SnmpAgentService {
   updateSnmpAgent(agent: SnmpAgent): Promise<SnmpAgent> {
     const url = `http://127.0.0.1:8000/api/agent/${agent._id}`;
     return this.http
-      .put(url, JSON.stringify(agent), { headers: this.headers })
+      .put(url, JSON.stringify(agent), this.jwt())
       .toPromise()
       .then(() => agent)
       .catch(this.handleError);
+  }
+  deleteSnmpAgent(agent: SnmpAgent): Promise<void> {
+    const url = `http://127.0.0.1:8000/api/agent/${agent._id}`;
+    return this.http
+      .delete(url, this.jwt())
+      .toPromise()
+      .then(() => null)
+      .catch(this.handleError);
+  }
+  // private helper methods
+
+  private jwt() {
+    // create authorization header with jwt token
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.token) {
+      let headers = new Headers({ 'Content-Type': 'application/json','Authorization': 'Bearer ' + currentUser.token });
+      return new RequestOptions({ headers: headers });
+    }else{
+      let headers = new Headers({ 'Content-Type': 'application/json'});
+      return new RequestOptions({ headers: headers });
+    }
   }
 }

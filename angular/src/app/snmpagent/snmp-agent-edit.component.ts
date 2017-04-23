@@ -31,6 +31,9 @@ export class SnmpAgentEditComponent implements OnInit {
     this.location.back();
   }
   save(): void {
-        this.snmpAgentService.updateSnmpAgent(this.agent).then(() => this.goBack());
-    }
+    this.snmpAgentService.updateSnmpAgent(this.agent).then(() => this.goBack());
+  }
+  remove(): void {
+    this.snmpAgentService.deleteSnmpAgent(this.agent).then(() => this.goBack());
+  }
 }

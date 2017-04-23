@@ -12,6 +12,7 @@ const config = require('../config');
 const SNMPMultiAgent = require('../lib/snmp-multiagent');
 const numCPUs = require('os').cpus().length;
 const userSchema = require('../models/user');//First check in db if exists Admin
+const deviceSchema = require('../models/device');
 const snmpAgentSchema = require('../models/snmp_agent');//First check in db if exists Admin
 const bcrypt = require('bcryptjs');
 /**
@@ -63,11 +64,12 @@ if (cluster.isMaster) {
   mongoose.connect(config.db.uri);
   mongoose.connection.once('connected', function () {
     checkAdmin();
-    snmpAgentSchema.find({},(err,docs)=>{
-      if(err){
+    checkTHISdevice();
+    snmpAgentSchema.find({}, (err, docs) => {
+      if (err) {
 
-      }else{
-        docs.forEach((doc,i)=>{
+      } else {
+        docs.forEach((doc, i) => {
           SNMPMultiAgent.launchSNMPAgent(doc._id);
         });
       }
@@ -151,8 +153,9 @@ function onListening() {
  */
 function checkAdmin() {
   //Default Admin name : Admin
-  userSchema.findOne({ 'local.name': 'Admin' }, (err, doc) => {
+  userSchema.findOne({ 'local.username': 'Admin' }, (err, doc) => {
     if (err || !doc) {
+      console.log('NO existe admin????');
       //Not exists -> Create new Admin user
       bcrypt.hash('Admin', 10).then(function (hash) {
         var adminUser = new userSchema({
@@ -167,17 +170,45 @@ function checkAdmin() {
             photo: '',
             nickName: 'Admin'
           },
-          rol : 'admin'
+          rol: 'admin'
         });
         adminUser.save((err) => {
-          if(err){
+          if (err) {
             console.log('Error saving new Admin');
             console.log(err);
           }
         });
       });
-    }else{
+    } else {
       console.log('Admin exists');
+    }
+  });
+}
+/**
+ * Check if exists the THIS device
+ * 
+ */
+function checkTHISdevice() {
+  deviceSchema.findOne({ 'name': 'THIS' }, (err, doc) => {
+    if (err || !doc) {
+      //Not exists -> Create new THIS device
+      var deviceTHIS = new deviceSchema({
+        name : 'THIS',
+        description : 'NetMGLab device',
+        ip : '127.0.0.1',
+        port : 160,
+        readOnlyCommunity : 'public',
+        readWriteCommunity : 'private',
+        mibModuleList : []
+      });
+      deviceTHIS.save((err) => {
+        if (err) {
+          console.log('Error saving new THIS device');
+          console.log(err);
+        }
+      });
+    } else {
+      console.log('This device exists');
     }
   });
 }

@@ -28,20 +28,24 @@ exports.findAllDevices = (req, res, next) => {
  * Add a new device. Use like middleware in ExpressJS
  */
 exports.addDevice = (req, res, next) => {
-    var device = new deviceSchema({
-        name: req.body.name,
-        description: req.body.description || '',
-        ip: req.body.ip,
-        port: req.body.port,
-        readOnlyCommunity: req.body.readOnlyCommunity || 'public',
-        readWriteCommunity: req.body.readWriteCommunity || 'private',
-        userGroup: req.body.userGroup || ''
-    });
+    if (req.body.name == 'THIS') {
+        res.status(500).send('Cant create a new THIS device');
+    } else {
+        var device = new deviceSchema({
+            name: req.body.name,
+            description: req.body.description || '',
+            ip: req.body.ip,
+            port: req.body.port,
+            readOnlyCommunity: req.body.readOnlyCommunity || 'public',
+            readWriteCommunity: req.body.readWriteCommunity || 'private',
+            userGroup: req.body.userGroup || ''
+        });
 
-    device.save(function (err, device) {
-        if (err) res.status(500).send(err.message);
-        res.status(200).jsonp(device);
-    });
+        device.save(function (err, device) {
+            if (err) res.status(500).send(err.message);
+            res.status(200).jsonp(device);
+        });
+    }
 }
 /**
  * Update a existing  device. Use like middleware in ExpressJS
@@ -50,12 +54,14 @@ exports.updateDevice = (req, res, next) => {
     console.log('Updating Device: ' + req.params.id);
     deviceSchema.findById(req.params.id, function (err, device) {
         if (err) res.status(500).send(err.message);
-        device.name = req.body.name || device.name;
+        if (device.name != 'THIS') {
+            device.name = req.body.name || device.name;
+        }
         device.port = req.body.port || device.port;
         device.readOnlyCommunity = req.body.readOnlyCommunity || device.readOnlyCommunity;
         device.readWriteCommunity = req.body.readWriteCommunity || device.readWriteCommunity;
         device.description = req.body.description || device.description;
-        device.userGroup = req.body.userGroup  || device.userGroup || '';
+        device.userGroup = req.body.userGroup || device.userGroup || '';
         device.save(function (err) {
             if (err) res.status(500).send(err.message);
             res.status(200).jsonp(device);
@@ -68,9 +74,14 @@ exports.updateDevice = (req, res, next) => {
 exports.deleteDevice = (req, res, next) => {
     deviceSchema.findById(req.params.id, (err, device) => {
         if (err) res.status(500).send(err.message);
-        device.remove((err) => {
-            if (err) res.status(500).send(err.message);
-            res.status(200).send();
-        });
+        if (device.name == 'THIS') {
+            //Cant remove this device
+            res.status(500).send('Cant remove the principal device: THIS');
+        } else {
+            device.remove((err) => {
+                if (err) res.status(500).send(err.message);
+                res.status(200).send();
+            });
+        }
     });
 }

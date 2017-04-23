@@ -28,4 +28,7 @@ export class DeviceEditComponent implements OnInit {
     save(): void {
         this.deviceService.updateDevice(this.device).then(() => this.goBack());
     }
+    remove(): void {
+        this.deviceService.deleteDevice(this.device).then(() => this.goBack());
+    }
 }

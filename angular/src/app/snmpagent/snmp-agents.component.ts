@@ -26,10 +26,13 @@ export class SnmpAgentsComponent implements OnInit{
     this.snmpAgentService.getSnmpAgents().then(agents => this.agents = agents);
   }
   onSelect(agent: SnmpAgent): void {
+    this.newAgent = null;
     this.selectedAgent = agent;
-    this.deviceForAgent = this.devices.find(device => device._id === agent.device);
+    this.deviceForAgent = this.devices.find(device => device._id === agent.device) || new Device({});
   }
   newSnmpAgent(): void{
+    this.selectedAgent = null;
+    this.deviceForAgent = null;
     this.newAgent = new SnmpAgent();
   }
 }
