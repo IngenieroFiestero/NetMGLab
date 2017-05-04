@@ -1,14 +1,15 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
 var api = require('./routes/api');
+const authController = require('./controllers/auth');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use(function (req, res, next) {
     next();
   }
 });
+app.use(authController.loginUser);
 app.use('/', index);//Login Page
 //app.use('/admin', admin);//Admin Page
 app.use('/dashboard', dashboard);//Dashboard of the netmanagement

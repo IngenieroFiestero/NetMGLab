@@ -1,5 +1,6 @@
 const userSchema = require('../models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 /**
  * Find user by ID. Use like middleware in ExpressJS
  */
@@ -9,9 +10,19 @@ exports.authenticateUser = (req, res, next) => {
             if (err) {
                 res.status(500).send(err.message);
             } else {
-                jwt.sign({ 'username': doc.local.username,'rol' :  doc.rol, 'userGroups' : doc.userGroups},
-                    process.jwtSecret || 'mysecret', { algorithm: 'HS256', expiresIn: 60 * 60 }, (err, token) => {
-                        res.status(200).jsonp({'token' : token});
+                bcrypt.hash(req.params.password, 10).then(function (hash) {
+                    bcrypt.compare(hash, doc.local.password, (err, sucess) => {
+                        if (err) {
+                            res.status(401).send('Not valid Username');
+                        } else if (!sucess) {
+                            res.status(401).send('Passwords not match');
+                        } else {
+                            jwt.sign({ 'username': doc.local.username, 'rol': doc.rol, 'userGroups': doc.userGroups },
+                                process.jwtSecret || 'mysecret', { algorithm: 'HS256', expiresIn: 60 * 60 }, (err, token) => {
+                                    res.status(200).jsonp({ 'token': token });
+                            });
+                        }
+                    });
                 });
             }
         });
@@ -19,17 +30,22 @@ exports.authenticateUser = (req, res, next) => {
         res.status(500).send('Not valid Username');
     }
 }
+/**
+ * Middleware for checking if a token is valid
+ */
 exports.loginUser = (req, res, next) => {
-    var token = info.req.headers.token;
+    var token = req.headers.token;
     if (!token) {
-        cb(false, 401, 'Unauthorized');
+       req.user = false;
+       next();
     } else {
         jwt.verify(token, process.jwtSecret || 'mysecret', function (err, decoded) {
             if (err) {
-                cb(false, 401, 'Unauthorized');
+                req.user = false;
+                next();
             } else {
-                info.req.user = decoded;
-                cb(true);
+                req.user = decoded;
+                next();
             }
         });
     }

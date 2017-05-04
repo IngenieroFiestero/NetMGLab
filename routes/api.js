@@ -5,6 +5,7 @@ const deviceSchema = require('../models/device');
 const snmpAgentSchema = require('../models/snmp_agent');
 const agentController = require('../controllers/snmpagents');
 const deviceController = require('../controllers/devices');
+const authController = require('../controllers/auth');
 /* GET API home page */
 router.get('/', function(req, res, next) {
     //Return version=1 in json
@@ -29,6 +30,9 @@ router.route('/device/:id')
     .get(deviceController.findDeviceById)
     .put(deviceController.updateDevice)
     .delete(deviceController.deleteDevice);
+
+router.route('/auth/authenticate')
+    .get(authController.authenticateUser);
 
 router.get('/user/:id', function(req, res, next) {
     if(req.param.id && req.param.id != ''){
